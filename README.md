@@ -1,6 +1,15 @@
-# Next.js Advanced API Routes to Netlify Functions migration example
+# Migrating Next.js Advanced API Routes to Netlify Functions
 
-## Migrating Next.js Advanced API Routes to Netlify Functions
+## Why do I need to do this?
+
+Starting with [version 5](https://docs.netlify.com/frameworks/next-js/overview/) of Netlify's Next.js Runtime (applicable for Next.js 13.5+), 
+support for background and scheduled functions implemented as Next.js API Routes (a.k.a. [Advanced API routes](https://docs.netlify.com/frameworks/next-js/runtime-v4/advanced-api-routes/)) is deprecated. 
+
+Instead, use regular [background](https://docs.netlify.com/functions/background-functions/) or [scheduled](https://docs.netlify.com/functions/scheduled-functions/) Netlify Functions for the same purposes.
+
+The main reason for dropping support is to improve robustness of the runtime: with v5, our goal is to simplify the runtime codebase as possible, and avoid adding or overriding functionality to built-in constructs of Next.js. This also allows us to focus on improving the core framework-agnostic features, which are applicable for all frameworks.
+
+Here are annotated examples of advanced API routes and their framework-agnostic counterparts:
 
 ### Scheduled Functions
 
@@ -14,8 +23,8 @@
 
 _NOTE_: [Netlify background functions file or directory needs to end in `-background` suffix.](https://docs.netlify.com/functions/background-functions/#create-background-functions)
 
-## Next.js APIs
+## Using Next.js APIs
 
-If your scheduled or background functions workloads require access to Next.js APIs (for example for on-demand revalidation like `res.revalidate()`, `revalidatePath` or `revalidateTag`), you will need to author Next.js API route that are invoked from Netlify function. Keep in mind that Next.js API routes will have shorter execution time limit compare to Netlify background function so you might need to distribute workload and call Next.js API multiple times with smaller work payloads.
+If your scheduled or background functions require access to Next.js APIs (e.g. on-demand revalidation via `revalidatePath` or `revalidateTag`), you will need to create a Next.js API route / Route Handler that is called from your Netlify function and has access to these APIs. 
 
-Examples of invoking Next.js API routes from Netlify function are added to both [Scheduled Function](/netlify/functions/scheduled-function.ts) and [Background Function](/netlify/functions/function-background.ts) examples.
+The above examples both showcase this.
